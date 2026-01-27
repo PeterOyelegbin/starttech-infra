@@ -18,7 +18,7 @@ This repository contains Infrastructure as Code (IaC) for deploying a complete w
 - GitHub Actions (for CI/CD pipeline)
 
 ## Directory Structure
-```mermaid
+```bash
 starttech-infra/
 ├── .github/              # GitHub Actions workflows
 ├── monitoring/           # Monitoring configurations
@@ -29,8 +29,7 @@ starttech-infra/
 │   ├── variables.tf      # Input variables
 │   └── outputs.tf        # Output values
 ├── .gitignore            # Github ignore configuration
-├── README.md             # Repository guide
-└── documentation/        # Project documentation
+└── README.md             # Repository guide
 ```
 
 ---
@@ -76,6 +75,27 @@ terraform apply -auto-approve
 ./scripts/deploy-infrastructure.sh
 ```
 
+## Delpoyment Tracking
+![start_deployment](./evidence/deploy-infra-1.png)
+![mid_deployment](./evidence/deploy-infra-2.png)
+![end_deployment](./evidence/deploy-infra-3.png)
+
+## Resources Created
+![vpc](./evidence/vpc.png)
+![subnets](./evidence/subnets.png)
+![route_tables](./evidence/route-tbl.png)
+![security_groups](./evidence/security-group.png)
+![s3_buckets](./evidence/s3-bucket.png)
+![launch_template](./evidence/launch-temp.png)
+![auto_scaling](./evidence/auto-scaling-grp.png)
+![target_group](./evidence/target-grp.png)
+![load_balancer](./evidence/load-balancer.png)
+![ec2_instances](./evidence/ec2-instance.png)
+![cloudfront](./evidence/cloudfront.png)
+![cloudwatch_logs](./evidence/cloudwatch-logs.png)
+![redis](./evidence/redis.png)
+![elastic_container_repo](./evidence/ecr.png)
+
 ---
 
 ## Clean Up
@@ -93,6 +113,7 @@ terraform destroy -auto-approve
 Infrastructure changes are automatically deployed via GitHub Actions:
 - Push to main branch triggers deployment
 - Pull requests to destroy branch triggers terraform-destroy
+![pipeline_deploy](./evidence/pipeline-deploy.png)
 
 ## Important Files
 - terraform/main.tf - Main infrastructure definition
