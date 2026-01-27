@@ -2,7 +2,7 @@ name: Infrastructure Management
 
 on:
   push:
-    branches: [dev, staging]
+    branches: [main, staging]
     paths: 
       - 'terraform/**'
       - '.github/workflows/infrastructure-deploy.yml'
@@ -87,11 +87,6 @@ jobs:
         with:
           name: tfplan
           path: terraform/
-
-      # - name: List Downloaded Files
-      #   run: |
-      #     echo "Current directory contents:"
-      #     ls -la
 
       - name: Terraform Apply
         run: |
