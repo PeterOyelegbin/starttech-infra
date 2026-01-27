@@ -105,28 +105,39 @@ jobs:
       - name: Output Terraform Data
         run: terraform output -json 2>/dev/null | grep -v "^::debug::" | head -n -0 > outputs.json
 
-      - name: Verify Terraform Outputs
+      - name: Read Terraform outputs
         run: |
-          # Check if file starts with {
-          if [[ $(head -n 1 outputs.json) != "{" ]]; then
-            echo "File doesn't start with {, cleaning..."
-            # Remove first line
-            tail -n +2 outputs.json > outputs_clean.json
-            mv outputs_clean.json outputs.json
-          fi
+          # Extract values from tf-outputs.json
+          ASG_SERVER_IDS=$(jq -r '.resource_details.value.asg_instance_ids[0]' outputs.json)
+          LOAD_BALANCER_DNS_NAME=$(jq -r '.resource_details.value.load_balancer_dns_name' outputs.json)
+          REDIS_ENDPOINT=$(jq -r '.resource_details.value.redis_primary_endpoint' outputs.json)
+          CLOUDFRONT_DISTRIBUTION_ID=$(jq -r '.resource_details.value.distribution_id' outputs.json)
+          CLOUDFRONT_URL=$(jq -r '.resource_details.value.cloudfront_url' outputs.json)
+          ECR_REPO_URL=$(jq -r '.resource_details.value.ecr_repo_url' outputs.json)
 
-          python3 -c "import json; json.load(open('outputs.json'))" && echo "✓ Valid JSON"
+          echo "ASG_SERVER_IDS=$ASG_SERVER_IDS" >> $GITHUB_ENV
+          echo "LOAD_BALANCER_DNS_NAME=$LOAD_BALANCER_DNS_NAME" >> $GITHUB_ENV
+          echo "REDIS_ENDPOINT=$REDIS_ENDPOINT" >> $GITHUB_ENV
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$CLOUDFRONT_DISTRIBUTION_ID" >> $GITHUB_ENV
+          echo "CLOUDFRONT_URL=$CLOUDFRONT_URL" >> $GITHUB_ENV
+          echo "ECR_REPO_URL=$ECR_REPO_URL" >> $GITHUB_ENV
 
-      - name: Install Python dependencies
-        run: pip3 install pynacl
-
-      - name: Update GitHub Secrets
+      - name: Update GitHub Secrets in Another Repository
         env:
-          GITHUB_TOKEN: ${{ vars.CICD_PAT_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        working-directory: ./terraform
+          GH_TOKEN: ${{ vars.CICD_PAT_TOKEN }}
         run: |
-          python3 scripts/update_env_vars.py
+          TARGET_REPO="PeterOyelegbin/starttech-application"
+
+          echo "Updating secrets in $TARGET_REPO ..."
+
+          gh secret set ASG_SERVER_IDS --body "$ASG_SERVER_IDS" --repo "$TARGET_REPO"
+          gh secret set LOAD_BALANCER_DNS_NAME --body "$LOAD_BALANCER_DNS_NAME" --repo "$TARGET_REPO"
+          gh secret set REDIS_ENDPOINT --body "$REDIS_ENDPOINT" --repo "$TARGET_REPO"
+          gh secret set CLOUDFRONT_DISTRIBUTION_ID --body "$CLOUDFRONT_DISTRIBUTION_ID" --repo "$TARGET_REPO"
+          gh secret set CLOUDFRONT_URL --body "$CLOUDFRONT_URL" --repo "$TARGET_REPO"
+          gh secret set ECR_REPO_URL --body "$ECR_REPO_URL" --repo "$TARGET_REPO"
+
+          echo "Secrets updated successfully in $TARGET_REPO"
 
 
   terraform-destroy:
