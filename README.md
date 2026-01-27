@@ -1,6 +1,6 @@
 # StartTech Infrastructure as Code
 A comprehensive Terraform-based infrastructure deployment for a scalable web application on AWS.
-
+ 
 ## Overview
 This repository contains Infrastructure as Code (IaC) for deploying a complete web application stack on AWS with auto-scaling, high availability, and comprehensive monitoring.
 
