@@ -100,6 +100,18 @@ jobs:
       - name: Output Terraform Data
         run: terraform output -json > outputs.json
 
+      - name: Verify Terraform Outputs
+        run: |
+          # Check if file starts with {
+          if [[ $(head -n 1 outputs.json) != "{" ]]; then
+            echo "File doesn't start with {, cleaning..."
+            # Remove first line
+            tail -n +2 outputs.json > outputs_clean.json
+            mv outputs_clean.json outputs.json
+          fi
+
+          python3 -c "import json; json.load(open('outputs.json'))" && echo "✓ Valid JSON"
+
       - name: Read Terraform outputs
         run: |
           # Extract values from outputs.json
