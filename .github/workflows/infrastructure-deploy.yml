@@ -8,7 +8,6 @@ on:
       - '.github/workflows/infrastructure-deploy.yml'
   pull_request:
     branches: [destoy-tf]
-    paths: ['terraform/**']
   workflow_dispatch:
 
 jobs:
