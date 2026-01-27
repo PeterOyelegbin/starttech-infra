@@ -132,11 +132,8 @@ jobs:
       - name: Update GitHub Secrets in Another Repository
         env:
           GH_TOKEN: ${{ vars.CICD_PAT_TOKEN }}
+          TARGET_REPO: ${{ vars.TARGET_REPO }}
         run: |
-          TARGET_REPO="PeterOyelegbin/starttech-application"
-
-          echo "Updating secrets in $TARGET_REPO ..."
-
           gh secret set ASG_SERVER_IDS --body "$ASG_SERVER_IDS" --repo "$TARGET_REPO"
           gh secret set LOAD_BALANCER_DNS_NAME --body "$LOAD_BALANCER_DNS_NAME" --repo "$TARGET_REPO"
           gh secret set REDIS_ENDPOINT --body "$REDIS_ENDPOINT" --repo "$TARGET_REPO"
