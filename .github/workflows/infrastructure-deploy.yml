@@ -110,8 +110,6 @@ jobs:
             mv outputs_clean.json outputs.json
           fi
 
-          cat outputs.json
-
           python3 -c "import json; json.load(open('outputs.json'))" && echo "✓ Valid JSON"
 
       - name: Read Terraform outputs
@@ -133,7 +131,7 @@ jobs:
 
       - name: Update GitHub Secrets in Another Repository
         env:
-          GH_TOKEN: ${{ vars.CICD_PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.CICD_PAT_TOKEN }}
         run: |
           TARGET_REPO="PeterOyelegbin/starttech-application"
 
