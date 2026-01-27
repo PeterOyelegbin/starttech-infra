@@ -98,11 +98,11 @@ jobs:
           terraform apply -var-file=terraform.tfvars tfplan
 
       - name: Output Terraform Data
-        run: terraform output -json 2>/dev/null | grep -v "^::debug::" | head -n -0 > outputs.json
+        run: terraform output -json > outputs.json
 
       - name: Read Terraform outputs
         run: |
-          # Extract values from tf-outputs.json
+          # Extract values from outputs.json
           ASG_SERVER_IDS=$(jq -r '.resource_details.value.asg_instance_ids[0]' outputs.json)
           LOAD_BALANCER_DNS_NAME=$(jq -r '.resource_details.value.load_balancer_dns_name' outputs.json)
           REDIS_ENDPOINT=$(jq -r '.resource_details.value.redis_primary_endpoint' outputs.json)
