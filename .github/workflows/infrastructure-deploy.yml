@@ -106,9 +106,11 @@ jobs:
           if [[ $(head -n 1 outputs.json) != "{" ]]; then
             echo "File doesn't start with {, cleaning..."
             # Remove first line
-            tail -n +2 outputs.json > outputs_clean.json
+            tail -n +1 outputs.json > outputs_clean.json
             mv outputs_clean.json outputs.json
           fi
+
+          cat outputs.json
 
           python3 -c "import json; json.load(open('outputs.json'))" && echo "✓ Valid JSON"
 
