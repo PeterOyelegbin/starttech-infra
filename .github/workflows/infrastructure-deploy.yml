@@ -115,7 +115,7 @@ jobs:
       - name: Read Terraform outputs
         run: |
           # Extract values from outputs.json
-          ASG_SERVER_IDS=$(jq -r '.asg_instance_ids.value[0]' outputs.json)
+          ASG_SERVER_IDS=$(jq -r '.asg_instance_ids.value' outputs.json)
           LOAD_BALANCER_DNS_NAME=$(jq -r '.load_balancer_dns_name.value' outputs.json)
           REDIS_ENDPOINT=$(jq -r '.redis_primary_endpoint.value' outputs.json)
           CLOUDFRONT_DISTRIBUTION_ID=$(jq -r '.distribution_id.value' outputs.json)
