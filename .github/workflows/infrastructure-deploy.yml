@@ -170,6 +170,11 @@ jobs:
 
       - name: Terraform Destroy
         run: |
+          aws s3 rm s3://${{ vars.PROJECT_NAME }}-frontend-bkt --recursive
+
+          IMAGE_DATA=$(aws ecr list-images --repository-name ${{ vars.PROJECT_NAME }}-ecr --region ${{ vars.AWS_REGION }} --query 'imageIds' --output json 2>/dev/null || echo "[]")
+          [[ "$IMAGE_DATA" != "[]" ]] && aws ecr batch-delete-image --repository-name ${{ vars.PROJECT_NAME }}-ecr --region ${{ vars.AWS_REGION }} --image-ids "$IMAGE_DATA" || echo "No images to delete"
+
           # Write the variable content to a file
           cat > terraform.tfvars << 'EOF'
           ${{ vars.TERRAFORM_TFVARS }}
